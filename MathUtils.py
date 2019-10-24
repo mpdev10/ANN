@@ -18,5 +18,3 @@ class MathUtils:
         n = len(train_data[1])
         batches = [(train_x[k:k + batch_size], train_y[k:k + batch_size]) for k in range(0, n, batch_size)]
         return batches
-
-
