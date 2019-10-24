@@ -18,7 +18,7 @@ class ANN:
     def forward(self, x):
         x = self._get_fixed_input(x)
         for w, b in zip(self._weights, self._biases):
-            x = self._activation.compute(np.dot(w, x) + b)
+            x = self._activation.compute(w.dot(x) + b)
         return x
 
     def train(self, train_data, epoch_num, batch_size, learning_rate, test_data=None):
@@ -50,7 +50,7 @@ class ANN:
         activations = [x]
         z_vector = []
         for w, b in zip(self._weights, self._biases):
-            z = np.dot(w, activation) + b
+            z = w.dot(activation) + b
             z_vector.append(z)
             activation = self._activation.compute(z)
             activations.append(activation)
@@ -64,7 +64,7 @@ class ANN:
             z = z_vector[-l]
             delta = np.dot(self._weights[-l + 1].T, delta) * self._activation.compute_derivative(z)
             activation = activations[-l - 1]
-            d_w[-l] = np.dot(delta, activation.T) / float(batch_size)
+            d_w[-l] = delta.dot(activation.T) / float(batch_size)
             d_b[-l] = np.mean(delta, axis=1, keepdims=True)
 
         return d_w, d_b
