@@ -4,6 +4,7 @@ import numpy as np
 
 from ANN import ANN
 from ActivationImpl import ActivationImpl
+from TestRun import TestRun
 
 
 def load_file(filename):
@@ -30,7 +31,8 @@ if __name__ == '__main__':
 
     train_x = train_data[0]
     train_y = train_data[1]
-    activation = ActivationImpl.sigmoid
+    activation = ActivationImpl.relu
 
     network = init_network_from_file(file, activation, hidden_layer_size=30)
-    network.train(train_data, 10000, 100, 0.1, test_data=test_data)
+    test_run = TestRun(network, train_data, test_data)
+    test_run.run(10)
