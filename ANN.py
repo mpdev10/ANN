@@ -59,7 +59,7 @@ class ANN:
             activations.append(activation)
 
         y_one_hot = MathUtils.one_hot(y, self._layer_sizes[-1])
-        error_deriv = (y_one_hot - z_vector[-1])
+        error_deriv = (y_one_hot - activations[-1])
         delta = error_deriv * self._activations[-1].compute_derivative(z_vector[-1])
         d_w[-1] = delta.dot(activations[-2].T) / float(batch_size)
         d_b[-1] = np.mean(delta, axis=1, keepdims=True)
