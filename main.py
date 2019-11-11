@@ -20,7 +20,7 @@ def load_file(filename):
 def test_batch_size(testrun, batch_sizes):
     results = []
     for batch_size in batch_sizes:
-        results.append(testrun.run(epoch_num=EPOCH_NUM, batch_size=batch_size, activation=ActivationImpl.relu,
+        results.append(testrun.run(epoch_num=EPOCH_NUM, batch_size=batch_size, activation=ActivationImpl.sigmoid,
                                    learning_rate=LEARNING_RATE, hidden_layer_size=HIDDEN_LAYER_SIZE, sigma=SIGMA,
                                    mu=MU, run_num=RUN_NUMBER))
     return results
@@ -29,7 +29,7 @@ def test_batch_size(testrun, batch_sizes):
 def test_weights_range(testrun, sigmas):
     results = []
     for sigma in sigmas:
-        results.append(testrun.run(epoch_num=EPOCH_NUM, batch_size=BATCH_SIZE, activation=ActivationImpl.relu,
+        results.append(testrun.run(epoch_num=EPOCH_NUM, batch_size=BATCH_SIZE, activation=ActivationImpl.sigmoid,
                                    learning_rate=LEARNING_RATE, hidden_layer_size=HIDDEN_LAYER_SIZE, sigma=sigma,
                                    mu=MU, run_num=RUN_NUMBER))
     return results
@@ -38,7 +38,7 @@ def test_weights_range(testrun, sigmas):
 def test_hidden_layer_size(testrun, hidden_layer_sizes):
     results = []
     for layer_size in hidden_layer_sizes:
-        results.append(testrun.run(epoch_num=EPOCH_NUM, batch_size=BATCH_SIZE, activation=ActivationImpl.relu,
+        results.append(testrun.run(epoch_num=EPOCH_NUM, batch_size=BATCH_SIZE, activation=ActivationImpl.sigmoid,
                                    learning_rate=LEARNING_RATE, hidden_layer_size=layer_size, sigma=SIGMA,
                                    mu=MU, run_num=RUN_NUMBER))
     return results
@@ -55,6 +55,7 @@ def test_activations(testrun, activations):
 
 if __name__ == '__main__':
     file = load_file("mnist.pkl")
+    train, valid, test = file
     test_run = TestRun(file)
 
     batch_results = test_batch_size(test_run, [2, 50, 250, 5000, 10000, 50000])

@@ -3,6 +3,7 @@ from collections import defaultdict
 import numpy as np
 
 from ANN import ANN
+from ActivationImpl import ActivationImpl
 from TestRunResults import TestRunResults
 
 
@@ -19,7 +20,7 @@ class TestRun:
         for i in range(0, run_num):
             network = self._init_network_from_file(self._data_file, activation, hidden_layer_size, sigma, mu)
             run_results = network.train(self._train_data, epoch_num, batch_size, learning_rate,
-                                        test_data=self._validation_data)
+                                        test_data=self._validation_data, log=False)
             for i in range(0, len(run_results)):
                 results[i].append(run_results[i])
                 test_accuracy.append(network.eval(self._test_data) / len(self._test_data[1]))
@@ -37,6 +38,6 @@ class TestRun:
         training_x, training_y = training_data
         label_num = np.max(training_y) + 1
         input_size = np.shape(training_x)[1]
-        return ANN([input_size, hidden_layer_size, label_num], activation=activation,
+        return ANN([input_size, hidden_layer_size, label_num], activations=[activation, ActivationImpl.sigmoid],
                    mu=mu,
                    sigma=sigma)
