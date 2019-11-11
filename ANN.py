@@ -22,6 +22,7 @@ class ANN:
         return x
 
     def train(self, train_data, epoch_num, batch_size, learning_rate, test_data=None, log=False):
+        results = []
         for i in range(epoch_num):
             batches = MathUtils.partition_data(train_data, batch_size)
 
@@ -31,8 +32,11 @@ class ANN:
                 self._weights = [w + (learning_rate * gw) for w, gw in zip(self._weights, d_w)]
                 self._biases = [b + (learning_rate * gb) for b, gb in zip(self._biases, d_b)]
 
+            accuracy = self.eval(test_data) / len(test_data[1])
+            results.append(accuracy)
             if test_data and log:
                 print("Epoch {0}: {1}/{2}".format(i, self.eval(test_data), len(test_data[1])))
+        return results
 
     def eval(self, test_data):
         x, y = test_data
