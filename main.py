@@ -3,8 +3,8 @@ import pickle as pkl
 from ActivationImpl import ActivationImpl
 from TestRun import TestRun
 
-EPOCH_NUM = 40
-LEARNING_RATE = 0.01
+EPOCH_NUM = 30
+LEARNING_RATE = 0.1
 SIGMA = 1
 MU = 0
 RUN_NUMBER = 5
