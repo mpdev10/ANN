@@ -22,6 +22,7 @@ class TestRun:
                                         test_data=self._validation_data)
             for i in range(0, len(run_results)):
                 results[i].append(run_results[i])
+                test_accuracy.append(network.eval(self._test_data) / len(self._test_data[1]))
 
         results_avg = [np.mean(results[i]) for i in range(0, epoch_num)]
         results_std = [np.std(results[i]) for i in range(0, epoch_num)]
