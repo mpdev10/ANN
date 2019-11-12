@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
     x = np.arange(0, len(run_results[0].averages))
     ax1.set_xlabel('Liczba epok')
-    ax1.set_ylabel('Dokładność [%]')
+    ax1.set_ylabel('Dokładność')
 
     for i in range(0, len(run_results)):
         label = input()
