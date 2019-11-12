@@ -61,15 +61,15 @@ class ANN:
         y_one_hot = MathUtils.one_hot(y, self._layer_sizes[-1])
         error_deriv = (y_one_hot - activations[-1])
         delta = error_deriv * self._activations[-1].compute_derivative(z_vector[-1])
-        d_w[-1] = delta.dot(activations[-2].T) / float(batch_size)
-        d_b[-1] = np.mean(delta, axis=1, keepdims=True)
+        d_w[-1] = delta.dot(activations[-2].T)
+        d_b[-1] = np.sum(delta, axis=1, keepdims=True)
 
         for l in range(2, self._layer_num):
             z = z_vector[-l]
             delta = np.dot(self._weights[-l + 1].T, delta) * self._activations[-l].compute_derivative(z)
             activation = activations[-l - 1]
-            d_w[-l] = delta.dot(activation.T) / float(batch_size)
-            d_b[-l] = np.mean(delta, axis=1, keepdims=True)
+            d_w[-l] = delta.dot(activation.T)
+            d_b[-l] = np.sum(delta, axis=1, keepdims=True)
 
         return d_w, d_b
 
