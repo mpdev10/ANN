@@ -32,7 +32,8 @@ class ANN:
                 self._biases = [b + (learning_rate * gb) for b, gb in zip(self._biases, d_b)]
 
             accuracy = self.eval(test_data) / len(test_data[1])
-            results.append(accuracy)
+            train_accuracy = self.eval(train_data) / len(train_data[1])
+            results.append((accuracy, train_accuracy))
             if test_data and log:
                 print("Epoch {0}: {1}/{2}".format(i, self.eval(test_data), len(test_data[1])))
         return results

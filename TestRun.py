@@ -15,6 +15,7 @@ class TestRun:
     def run(self, epoch_num, batch_size, activation, learning_rate=0.01, sigma=1, mu=0, run_num=5,
             hidden_layer_size=100):
         results = defaultdict(list)
+        train_results = defaultdict(list)
         test_accuracy = []
 
         for i in range(0, run_num):
@@ -22,15 +23,17 @@ class TestRun:
             run_results = network.train(self._train_data, epoch_num, batch_size, learning_rate,
                                         test_data=self._validation_data, log=False)
             for i in range(0, len(run_results)):
-                results[i].append(run_results[i])
+                results[i].append(run_results[i][0])
+                train_results[i].append(run_results[i][1])
                 test_accuracy.append(network.eval(self._test_data) / len(self._test_data[1]))
 
         results_avg = [np.mean(results[i]) for i in range(0, epoch_num)]
         results_std = [np.std(results[i]) for i in range(0, epoch_num)]
+        train_results_avg = [np.mean(train_results[i]) for i in range(0, epoch_num)]
         test_avg = np.mean(test_accuracy)
         test_std = np.std(test_accuracy)
 
-        return TestRunResults(results_avg, results_std, test_avg, test_std)
+        return TestRunResults(results_avg, results_std, test_avg, test_std, train_results_avg)
 
     @staticmethod
     def _init_network_from_file(loaded_file, activation, hidden_layer_size, sigma, mu):

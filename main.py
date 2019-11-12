@@ -68,7 +68,7 @@ if __name__ == '__main__':
     pkl.dump(weight_results, weight_output)
     weight_output.close()
 
-    layers_results = test_hidden_layer_size(test_run, [5, 25, 50, 100, 200, 300])
+    layers_results = test_hidden_layer_size(test_run, [5, 25, 50, 100, 200, 1000])
     layers_output = open('layers.pkl', 'wb')
     pkl.dump(layers_results, layers_output)
     layers_output.close()
