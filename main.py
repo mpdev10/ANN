@@ -1,79 +1,36 @@
-import pickle as pkl
+from Activation.relu import ReLU
+from Activation.softmax import Softmax
+from Callback.logger_callback import LoggerCallback
+from Callback.plot_callback import PlotCallback
+from Callback.save_best_callback import SaveBestCallback
+from Init.xavier_initializer import XavierInit
+from Layer.dense import Dense
+from Loss.mse import MeanSquaredError
+from Model.model import ANN
+from Optimizer.gradient_descent_static import GradientDescent
+from Util.Preprocessing.data_loader import get_data
 
-from ActivationImpl import ActivationImpl
-from TestRun import TestRun
+model = ANN(
+    optimizer=GradientDescent(learning_rate=0.01),
+    loss=MeanSquaredError(),
+    layers=[
+        Dense(layer_size=50, activation_func=ReLU(), weight_initializer=XavierInit()),
+        Dense(layer_size=10, activation_func=Softmax(), weight_initializer=XavierInit())
+    ],
+    callbacks=[
+        SaveBestCallback('./results/01_10_2019_13:00', 'best_model.pkl'),
+        LoggerCallback(),
+        PlotCallback('./results/batch_size/', 'test.pkl')
+    ]
+)
 
-EPOCH_NUM = 40
-LEARNING_RATE = 0.01
-SIGMA = 1
-MU = 0
-RUN_NUMBER = 5
-HIDDEN_LAYER_SIZE = 100
-BATCH_SIZE = 40
+(X_train, y_train), (X_val, y_val), (X_test, y_test) = get_data()
 
+model.fit(
+    x_train=X_train, y_train=y_train,
+    x_val=X_val, y_val=y_val,
+    epochs=10,
+    batch_size=32
+)
 
-def load_file(filename):
-    file = open(filename, 'rb')
-    return pkl.load(file, encoding='latin1')
-
-
-def test_batch_size(testrun, batch_sizes):
-    results = []
-    for batch_size in batch_sizes:
-        results.append(testrun.run(epoch_num=EPOCH_NUM, batch_size=batch_size, activation=ActivationImpl.sigmoid,
-                                   learning_rate=LEARNING_RATE, hidden_layer_size=HIDDEN_LAYER_SIZE, sigma=SIGMA,
-                                   mu=MU, run_num=RUN_NUMBER))
-    return results
-
-
-def test_weights_range(testrun, sigmas):
-    results = []
-    for sigma in sigmas:
-        results.append(testrun.run(epoch_num=EPOCH_NUM, batch_size=BATCH_SIZE, activation=ActivationImpl.sigmoid,
-                                   learning_rate=LEARNING_RATE, hidden_layer_size=HIDDEN_LAYER_SIZE, sigma=sigma,
-                                   mu=MU, run_num=RUN_NUMBER))
-    return results
-
-
-def test_hidden_layer_size(testrun, hidden_layer_sizes):
-    results = []
-    for layer_size in hidden_layer_sizes:
-        results.append(testrun.run(epoch_num=EPOCH_NUM, batch_size=BATCH_SIZE, activation=ActivationImpl.sigmoid,
-                                   learning_rate=LEARNING_RATE, hidden_layer_size=layer_size, sigma=SIGMA,
-                                   mu=MU, run_num=RUN_NUMBER))
-    return results
-
-
-def test_activations(testrun, activations):
-    results = []
-    for activation in activations:
-        results.append(testrun.run(epoch_num=EPOCH_NUM, batch_size=BATCH_SIZE, activation=activation,
-                                   learning_rate=LEARNING_RATE, hidden_layer_size=HIDDEN_LAYER_SIZE, sigma=SIGMA,
-                                   mu=MU, run_num=RUN_NUMBER))
-    return results
-
-
-if __name__ == '__main__':
-    file = load_file("mnist.pkl")
-    train, valid, test = file
-    test_run = TestRun(file)
-
-    batch_results = test_batch_size(test_run, [2, 50, 250, 5000, 10000, 50000])
-    batch_output = open('batch.pkl', 'wb')
-    pkl.dump(batch_results, batch_output)
-    batch_output.close()
-
-    weight_results = test_weights_range(test_run, [0.1, 0.5, 1, 2, 5, 10])
-    weight_output = open('weight.pkl', 'wb')
-    pkl.dump(weight_results, weight_output)
-    weight_output.close()
-
-    layers_results = test_hidden_layer_size(test_run, [5, 25, 50, 100, 200, 1000])
-    layers_output = open('layers.pkl', 'wb')
-    pkl.dump(layers_results, layers_output)
-    layers_output.close()
-
-    activation_results = test_activations(test_run, [ActivationImpl.relu, ActivationImpl.sigmoid])
-    activation_output = open('activation.pkl', 'wb')
-    pkl.dump(activation_results, activation_output)
-    activation_output.close()
+model.test(X_test, y_test)
