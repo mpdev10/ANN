@@ -1,4 +1,4 @@
-class NetworkState:
+class TrainingState:
     def __init__(self):
         self.current_epoch = 0
 

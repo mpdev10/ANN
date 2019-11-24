@@ -1,6 +1,7 @@
-from Activation.relu import ReLU
-from Activation.sigmoid import Sigmoid
 from Tests.test_activations import test_activation_functions
+
+from Activation.Relu import Relu
+from Activation.Sigmoid import Sigmoid
 
 # test_weight_initializers([
 #     XavierInitializer(1),
@@ -11,7 +12,7 @@ from Tests.test_activations import test_activation_functions
 #     RangeInitializer(-0.05, 0.05)
 # ])
 #
-test_activation_functions([Sigmoid(), ReLU()])
+test_activation_functions([Sigmoid(), Relu()])
 #
 # test_layer_configs([
 #     {

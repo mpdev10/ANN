@@ -2,7 +2,7 @@ from collections import defaultdict
 
 import numpy as np
 
-from Optimizer.optimizer import Optimizer
+from Optimizer.Optimizer import Optimizer
 
 
 class Adam(Optimizer):

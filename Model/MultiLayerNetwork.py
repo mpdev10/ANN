@@ -1,11 +1,11 @@
 import numpy as np
 
-from Model.state import NetworkState
-from Util.Metric.normal_accuracy import NormalAccuracy
-from Util.Metric.time_metric import Timer
+from Model.TrainingState import TrainingState
+from Util.Metric.Accuracy import Accuracy
+from Util.Metric.Timer import Timer
 
 
-class ANN:
+class MultiLayerNetwork:
 
     def __init__(self, loss, optimizer, layers=None, callbacks=None):
         self._loss = loss
@@ -21,46 +21,46 @@ class ANN:
 
     @Timer(dump_to_file=False, message='Training time')
     def fit(self, x_train, y_train, x_val=None, y_val=None, epochs=1000, batch_size=32):
-        self._state = NetworkState()
+        self._state = TrainingState()
         self._prepare_layers(x_train.shape[1])
 
         self._state.batch_size = batch_size
         self._state.epochs = epochs
 
-        self._run_callbacks('on_training_begin')
+        self._notify_callbacks('on_training_begin')
 
         for epoch in range(1, epochs + 1):
             self._state.current_epoch = epoch
-            self._run_callbacks('on_epoch_begin')
+            self._notify_callbacks('on_epoch_begin')
             x_train, y_train = self._shuffle_data(x_train, y_train)
             batches = self._prepare_batches(x_train, y_train, batch_size)
 
             costs, predictions = [], []
             for batch in batches:
                 self._state.current_batch = batch
-                self._run_callbacks('on_batch_begin')
+                self._notify_callbacks('on_batch_begin')
                 y_pred, cost = self._run_batch(batch[0], batch[1])
                 predictions.extend(y_pred)
                 costs.append(cost)
 
-                self._run_callbacks('on_batch_end')
+                self._notify_callbacks('on_batch_end')
 
             train_pred = self.predict(x_train)
             _, train_cost = self._loss(y_train, train_pred)
-            self._state.current_training_accuracy = NormalAccuracy.calculate(y_train, train_pred)
+            self._state.current_training_accuracy = Accuracy.calculate(y_train, train_pred)
             self._state.current_training_cost = np.mean(train_cost)
 
             if x_val is not None and y_val is not None:
-                self._run_callbacks('on_validation_test_begin')
+                self._notify_callbacks('on_validation_test_begin')
                 val_pred = self.predict(x_val)
                 val_error, val_cost = self._loss(y_val, val_pred)
-                self._state.current_validation_accuracy = NormalAccuracy.calculate(y_val, val_pred)
+                self._state.current_validation_accuracy = Accuracy.calculate(y_val, val_pred)
                 self._state.current_validation_cost = val_cost
-                self._run_callbacks('on_validation_test_end')
+                self._notify_callbacks('on_validation_test_end')
 
-            self._run_callbacks('on_epoch_end')
+            self._notify_callbacks('on_epoch_end')
 
-        self._run_callbacks('on_training_end')
+        self._notify_callbacks('on_training_end')
 
     def _update_layers(self, x, error, cost):
         for layer in self._layers:
@@ -102,13 +102,13 @@ class ANN:
             size = layer.get_size()
 
     def test(self, x, y):
-        self._run_callbacks('on_test_begin')
+        self._notify_callbacks('on_test_begin')
         predictions = self.predict(x)
-        accuracy = NormalAccuracy.calculate(predictions, y)
+        accuracy = Accuracy.calculate(predictions, y)
         self._state.test_accuracy = accuracy
-        self._run_callbacks('on_test_end')
+        self._notify_callbacks('on_test_end')
 
-    def get_state(self):
+    def get_training_state(self):
         return self._state
 
     def get_layers(self):
@@ -117,7 +117,7 @@ class ANN:
     def get_optimizer(self):
         return self._optimizer
 
-    def _run_callbacks(self, name):
+    def _notify_callbacks(self, name):
         for callback in self._callbacks:
             callback.__getattribute__(name)(self)
 

@@ -1,15 +1,15 @@
 import numpy as np
 
-from Activation.activation import Activation
+from Activation.Activation import Activation
 
 
-class ReLU(Activation):
+class Relu(Activation):
     name = 'relu'
 
-    def run(self, z):
+    def compute(self, z):
         return np.where(z > 0, z, 0)
 
-    def derivative(self, a):
+    def compute_deriv(self, a):
         return np.where(a > 0, 1, 0)
 
     def get_name(self):

@@ -1,6 +1,6 @@
 from keras.datasets import mnist
 
-from Util.Preprocessing import one_hot, flatten
+from Util.Preprocessing.transformations import flatten, one_hot
 
 TRAINING_SIZE = 50000
 

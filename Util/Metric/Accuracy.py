@@ -1,10 +1,10 @@
 import numpy as np
 
-from Util.Metric.metric import Metric
+from Util.Metric.Metric import Metric
 
 
-class NormalAccuracy(Metric):
-    name = 'normal-accuracy'
+class Accuracy(Metric):
+    name = 'accuracy'
 
     @staticmethod
     def calculate(y_1, y_2):

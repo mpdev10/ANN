@@ -1,6 +1,6 @@
 import numpy as np
 
-from Loss.loss import Loss
+from Loss.Loss import Loss
 
 
 class MeanSquaredError(Loss):

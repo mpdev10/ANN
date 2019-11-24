@@ -1,4 +1,4 @@
-from Optimizer.optimizer import Optimizer
+from Optimizer.Optimizer import Optimizer
 
 
 class GradientDescent(Optimizer):

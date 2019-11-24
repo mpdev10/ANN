@@ -1,10 +1,10 @@
 class Activation(object):
     name = 'activation'
 
-    def run(self, z):
+    def compute(self, z):
         raise NotImplementedError
 
-    def derivative(self, a):
+    def compute_deriv(self, a):
         raise NotImplementedError
 
     def get_name(self):

@@ -1,14 +1,14 @@
 import numpy as np
 
-from Activation.sigmoid import Sigmoid
-from Init.xavier_initializer import XavierInit
-from Init.zero_initializer import ZeroInit
-from Layer.layer import Layer
+from Activation.Sigmoid import Sigmoid
+from Init.XavierInit import XavierInit
+from Init.ZerosInit import ZerosInit
+from Layer.Layer import Layer
 
 
 class Dense(Layer):
     def __init__(self, layer_size, weight_initializer=XavierInit(), activation_func=Sigmoid(),
-                 bias_initializer=ZeroInit(), layer_name='dense'):
+                 bias_initializer=ZerosInit(), layer_name='dense'):
         super().__init__(layer_size, layer_name)
         self._weight_initializer = weight_initializer
         self._activation_func = activation_func
@@ -29,10 +29,10 @@ class Dense(Layer):
         return self._delta @ self._weights.T
 
     def update_delta(self, error):
-        self._delta = error * self._activation_func.derivative(self._activations)
+        self._delta = error * self._activation_func.compute_deriv(self._activations)
 
     def feed(self, x):
-        self._activations = self._activation_func.run(x @ self._weights + self._biases)
+        self._activations = self._activation_func.compute(x @ self._weights + self._biases)
         return self._activations
 
     def update(self, x, error, cost):

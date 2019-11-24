@@ -1,6 +1,6 @@
 import numpy as np
 
-from Init.init import Init
+from Init.Init import Init
 
 
 class XavierInit(Init):
