@@ -14,7 +14,7 @@ class SaveResultsCallback(Callback):
         self.path = destination_path
         self._start_time = 0
 
-    def on_training_begin(self, model):
+    def on_train_start(self, model):
         self.val_accuracies = []
         self.val_losses = []
         self.training_accuracies = []
@@ -27,11 +27,11 @@ class SaveResultsCallback(Callback):
         self.training_accuracies.append(model.get_training_state().current_training_accuracy)
         self.training_losses.append(model.get_training_state().current_training_cost)
 
-    def on_validation_test_end(self, model):
+    def on_validation_end(self, model):
         self.val_accuracies.append(model.get_training_state().current_validation_accuracy)
         self.val_losses.append(model.get_training_state().current_validation_cost)
 
-    def on_training_end(self, model):
+    def on_train_end(self, model):
         batch_size = model.get_training_state().batch_size
         epochs = model.get_training_state().epochs
         learning_rate = model.get_training_state().learning_rate

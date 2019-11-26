@@ -1,8 +1,8 @@
 from Util.Preprocessing.data_loader import get_data
 
 default_parameters = {
-    'epochs': 30,
-    'batch_size': 32,
+    'epochs': 40,
+    'batch_size': 25,
     'learning_rate': 0.01,
 }
 

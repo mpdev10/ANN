@@ -27,18 +27,18 @@ class MultiLayerNetwork:
         self._state.batch_size = batch_size
         self._state.epochs = epochs
 
-        self._notify_callbacks('on_training_begin')
+        self._notify_callbacks('on_train_start')
 
         for epoch in range(1, epochs + 1):
             self._state.current_epoch = epoch
-            self._notify_callbacks('on_epoch_begin')
+            self._notify_callbacks('on_epoch_start')
             x_train, y_train = self._shuffle_data(x_train, y_train)
             batches = self._prepare_batches(x_train, y_train, batch_size)
 
             costs, predictions = [], []
             for batch in batches:
                 self._state.current_batch = batch
-                self._notify_callbacks('on_batch_begin')
+                self._notify_callbacks('on_batch_start')
                 y_pred, cost = self._run_batch(batch[0], batch[1])
                 predictions.extend(y_pred)
                 costs.append(cost)
@@ -51,16 +51,16 @@ class MultiLayerNetwork:
             self._state.current_training_cost = np.mean(train_cost)
 
             if x_val is not None and y_val is not None:
-                self._notify_callbacks('on_validation_test_begin')
+                self._notify_callbacks('on_validation_start')
                 val_pred = self.predict(x_val)
                 val_error, val_cost = self._loss(y_val, val_pred)
                 self._state.current_validation_accuracy = Accuracy.calculate(y_val, val_pred)
                 self._state.current_validation_cost = val_cost
-                self._notify_callbacks('on_validation_test_end')
+                self._notify_callbacks('on_validation_end')
 
             self._notify_callbacks('on_epoch_end')
 
-        self._notify_callbacks('on_training_end')
+        self._notify_callbacks('on_train_end')
 
     def _update_layers(self, x, error, cost):
         for layer in self._layers:
@@ -102,7 +102,7 @@ class MultiLayerNetwork:
             size = layer.get_size()
 
     def test(self, x, y):
-        self._notify_callbacks('on_test_begin')
+        self._notify_callbacks('on_test_start')
         predictions = self.predict(x)
         accuracy = Accuracy.calculate(predictions, y)
         self._state.test_accuracy = accuracy
