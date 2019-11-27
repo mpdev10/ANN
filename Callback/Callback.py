@@ -17,7 +17,7 @@ class Callback(object):
     def on_epoch_end(self, model):
         pass
 
-    def on_validation_begin(self, model):
+    def on_validation_start(self, model):
         pass
 
     def on_validation_end(self, model):

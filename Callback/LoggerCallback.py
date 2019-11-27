@@ -6,18 +6,18 @@ class LoggerCallback(Callback):
         self._best_validation_accuracy = 0
         self._best_validation_loss = 0
 
-    def on_training_end(self, model):
+    def on_train_end(self, model):
         print(f'Finished training... Best validation result: '
               f'[Accuracy: {self._best_validation_accuracy:.2f}%] '
               f'[Cost: {self._best_validation_loss:.8f}]')
 
-    def on_training_begin(self, model):
+    def on_train_start(self, model):
         print(f'Training started... ')
         self._best_validation_accuracy = 0
         self._best_validation_loss = 0
         print(f'Optimizer: {model.get_optimizer().get_name()}({model.get_optimizer().get_parameters()})')
 
-    def on_validation_test_end(self, model):
+    def on_validation_end(self, model):
         print(f'[Epoch: {model.get_training_state().current_epoch:5d}, '
               f'Train acc: {model.get_training_state().current_training_accuracy:.2f}%, '
               f'Train cost: {model.get_training_state().current_training_cost:.8f}, '

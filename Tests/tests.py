@@ -1,6 +1,6 @@
 from Activation.Relu import Relu
 from Activation.Softmax import Softmax
-from Callback.LogCallback import LogCallback
+from Callback.LoggerCallback import LoggerCallback
 from Callback.SaveResultsCallback import SaveResultsCallback
 from Init.XavierInit import XavierInit
 from Layer.Dense import Dense
@@ -20,7 +20,7 @@ def test_single_initializer(initializer):
             Dense(layer_size=10, activation_func=Softmax(), weight_initializer=initializer)
         ],
         callbacks=[
-            LogCallback(),
+            LoggerCallback(),
             SaveResultsCallback(f'./tests/initializers/{initializer.get_name()}')
         ]
     )
