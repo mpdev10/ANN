@@ -2,7 +2,7 @@ from keras.datasets import mnist
 
 from util.preprocessing.transformations import one_hot, reshape
 
-TRAINING_SIZE = 1000
+TRAINING_SIZE = 48000
 
 
 def get_data():

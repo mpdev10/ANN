@@ -21,13 +21,13 @@ class MaxPool2d(Layer):
 
     @staticmethod
     def _pooling(strided_layer_view):
-        layer = np.max(strided_layer_view, axis=(-3, -2), keepdims=True).astype(np.float16)
-        layer_ = layer + np.random.uniform(0, 1e-8, size=strided_layer_view.shape).astype(np.float16)
-        mask = (layer_ == np.max(layer_, axis=(-3, -2), keepdims=True)).astype(np.float16)
-        return mask, np.squeeze(layer, axis=(-3, -2)).astype(np.float16)
+        layer = np.max(strided_layer_view, axis=(-3, -2), keepdims=True)
+        layer_ = layer + np.random.uniform(0, 1e-8, size=strided_layer_view.shape)
+        mask = (layer_ == np.max(layer_, axis=(-3, -2), keepdims=True))
+        return mask, np.squeeze(layer, axis=(-3, -2))
 
     def feed(self, input_layer):
-        self._input_layer = input_layer.astype(np.float16)
+        self._input_layer = input_layer
         strided_layer_view = self._get_strided_layer_view(input_layer)
         self._mask, self._output_layer = self._pooling(strided_layer_view)
         return self._output_layer
@@ -35,7 +35,7 @@ class MaxPool2d(Layer):
     def get_error(self):
         error = np.zeros(self._input_layer.shape, dtype=np.float16)
         strided_error_view = self._get_strided_layer_view(error)
-        return strided_error_view.astype(np.float16)
+        return strided_error_view
 
     def update_delta(self, error):
         mask = self._mask * error.reshape(self._error_shape)
@@ -49,5 +49,4 @@ class MaxPool2d(Layer):
         stride_1, stride_2, stride_3, stride_4 = input_layer.strides
         view_shape = (num_of_inputs, mH, mW, pH, pW, num_of_channels)
         strides_shape = (stride_1, stride_2 * stride_height, stride_3 * stride_width, stride_2, stride_3, stride_4)
-        return as_strided(input_layer, shape=view_shape, strides=strides_shape, writeable=False).astype(
-            np.float16)
+        return as_strided(input_layer, shape=view_shape, strides=strides_shape, writeable=False)

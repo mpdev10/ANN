@@ -25,10 +25,10 @@ def test_kernel_sizes(kernel_sizes):
             optimizer=Adam(learning_rate=configuration['learning_rate']),
             loss=CrossEntropy(),
             layers=[
-                Conv2d(filter_num=4, kernel=kernel_s, activation_func=Relu()),
+                Conv2d(filter_num=1, kernel=kernel_s, activation_func=Relu()),
                 Flatten(),
-                Dense(layer_size=50, activation_func=Relu(), weight_initializer=XavierInit()),
-                Dense(layer_size=10, activation_func=Softmax(), weight_initializer=XavierInit())
+                Dense(layer_size=50, activation_func=Relu(), weight_initializer=XavierInit(gain=12)),
+                Dense(layer_size=10, activation_func=Softmax(), weight_initializer=XavierInit(gain=12))
             ],
             callbacks=[LoggerCallback()]
         )
